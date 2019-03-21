@@ -102,17 +102,9 @@ class MetroList
             return $cityArr;
         }
 
-        $metroArr = [];
+        event(new MetrosFoundEvent($metros));
 
-        if(!empty($metros['lines'])) {
-            foreach ($metros['lines'] as $line) {
-                $metroArr[] = new MetroLine($line);
-            }
-        }
-
-        event(new MetrosFoundEvent($metroArr));
-
-        return $metroArr;
+        return $metros;
 
     }
 
@@ -139,12 +131,19 @@ class MetroList
 
         if ($response->getStatusCode() == 200) {
             $answer = json_decode($response->getBody()->getContents(), true);
+            $metroArr = [];
+
+            if(!empty($answer['lines'])) {
+                foreach ($answer['lines'] as $line) {
+                    $metroArr[] = new MetroLine($line);
+                }
+            }
 
             if ($this->cache) {
-                Cache::put($cacheName, $answer, $this->cache * 60);
+                Cache::put($cacheName, $metroArr, $this->cache * 60);
             }
             
-            return $answer;
+            return $metroArr;
         }
 
         return false;
