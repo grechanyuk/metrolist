@@ -2,7 +2,8 @@
 
 namespace Grechanyuk\MetroList\Entities;
 
-class MetroLine {
+class MetroLine
+{
     private $id;
     private $hexColor;
     private $name;
@@ -78,6 +79,11 @@ class MetroLine {
     public function getStations()
     {
         return $this->stations;
+    }
+
+    public function hasStations()
+    {
+        return !empty($this->stations);
     }
 
 }
