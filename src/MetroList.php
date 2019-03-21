@@ -82,13 +82,22 @@ class MetroList
 
     public function getMetrosListByCityName(string $city, string $country = null)
     {
-        $metros = (object)[];
+        $cities = $this->getAreaFromName($city, $country);
 
-        $city = $this->getAreaFromName($city, $country);
-
-        if (count($city) === 1) {
-            $metros = $this->getMetroList($city[0]['id']);
+        if (count($cities) === 1) {
+            $metros = $this->getMetroList($cities[0]['id']);
             event(new MetrosFoundEvent($metros));
+        } else {
+            foreach ($cities as $key => $city) {
+                $parent = [];
+                if(!empty($city['parent_id'])) {
+                    $parent = $this->getAreas($city['parent_id']);
+                }
+
+                $cities[$key]['parent'] = $parent;
+            }
+
+            return $cities;
         }
 
         return !empty($metros->lines) ? $metros->lines : null;
