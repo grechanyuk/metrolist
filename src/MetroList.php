@@ -2,6 +2,8 @@
 
 namespace Grechanyuk\MetroList;
 
+use Grechanyuk\MetroList\Entities\City;
+use Grechanyuk\MetroList\Entities\MetroLine;
 use Grechanyuk\MetroList\Events\CitiesFoundEvent;
 use Grechanyuk\MetroList\Events\MetrosFoundEvent;
 use GuzzleHttp\Client;
@@ -86,21 +88,31 @@ class MetroList
 
         if (count($cities) === 1) {
             $metros = $this->getMetroList($cities[0]['id']);
-            event(new MetrosFoundEvent($metros));
         } else {
-            foreach ($cities as $key => $city) {
+            $cityArr = [];
+            foreach ($cities as $city) {
                 $parent = [];
                 if(!empty($city['parent_id'])) {
                     $parent = $this->getAreas($city['parent_id']);
                 }
 
-                $cities[$key]['parent'] = $parent;
+                $cityArr[] = new City($city, $parent);
             }
 
-            return $cities;
+            return $cityArr;
         }
 
-        return !empty($metros->lines) ? $metros->lines : null;
+        $metroArr = [];
+
+        if(!empty($metros['lines'])) {
+            foreach ($metros['lines'] as $line) {
+                $metroArr[] = new MetroLine($line);
+            }
+        }
+
+        event(new MetrosFoundEvent($metroArr));
+
+        return $metroArr;
 
     }
 
@@ -126,7 +138,7 @@ class MetroList
         }
 
         if ($response->getStatusCode() == 200) {
-            $answer = json_decode($response->getBody()->getContents());
+            $answer = json_decode($response->getBody()->getContents(), true);
 
             if ($this->cache) {
                 Cache::put($cacheName, $answer, $this->cache * 60);

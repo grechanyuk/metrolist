@@ -6,7 +6,7 @@ class CitiesFoundEvent {
 
     public $cities;
 
-    public function __construct($cities)
+    public function __construct(array $cities)
     {
         $this->cities = $cities;
     }
