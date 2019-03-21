@@ -2,7 +2,7 @@
 
 namespace Grechanyuk\MetroList\Entities;
 
-class MetroLine
+class MetroLine implements \JsonSerializable
 {
     private $id;
     private $hexColor;
@@ -15,6 +15,11 @@ class MetroLine
         $this->setHexColor($line['hex_color']);
         $this->setName($line['name']);
         $this->setStations($line['stations']);
+    }
+
+    public function jsonSerialize()
+    {
+        return get_object_vars($this);
     }
 
     /**

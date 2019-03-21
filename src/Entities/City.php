@@ -2,7 +2,7 @@
 
 namespace Grechanyuk\MetroList\Entities;
 
-class City {
+class City implements \JsonSerializable {
     private $id;
     private $name;
     private $parent_id;
@@ -18,6 +18,11 @@ class City {
         }
         $this->setParentId($city['parent_id']);
         $this->setAreas($city['areas']);
+    }
+
+    public function jsonSerialize($arr = false)
+    {
+        return get_object_vars($this);
     }
 
     /**
