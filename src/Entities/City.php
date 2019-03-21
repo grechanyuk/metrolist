@@ -59,4 +59,44 @@ class City {
     {
         $this->id = $id;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParentId()
+    {
+        return $this->parent_id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAreas()
+    {
+        return $this->areas;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
 }
